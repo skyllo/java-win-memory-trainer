@@ -36,32 +36,15 @@ public class JTrainer
 		JKernel32.closeHandle(hProcess);
 		return result;
 	}
-	
+
 	public String getLastError()
 	{
 		return JKernel32.getLastError();
 	}
-	
+
 	public void retryProcess() throws WindowNotFoundException
 	{
-		if (!isProcessAvailable())
-		{
-			this.pid = JUser32.getWindowThreadProcessId(JUser32.findWindow(windowClass, windowText));
-		}
-	}
-
-	public boolean isProcessAvailable()
-	{
-		try
-		{
-			JKernel32.openProcess(this.pid);
-			return true;
-		}
-		catch (MemoryException e)
-		{
-			//
-		}
-		return false;
+		this.pid = JUser32.getWindowThreadProcessId(JUser32.findWindow(windowClass, windowText));
 	}
 
 }
