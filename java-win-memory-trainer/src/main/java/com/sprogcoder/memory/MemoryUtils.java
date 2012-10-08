@@ -1,4 +1,4 @@
-package com.sprogcoder.memory.editor;
+package com.sprogcoder.memory;
 
 import java.util.Arrays;
 import java.util.Collections;
