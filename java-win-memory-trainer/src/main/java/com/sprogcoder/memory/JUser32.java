@@ -17,16 +17,12 @@ public class JUser32
 		int GetWindowThreadProcessId(HWND hWnd, int[] lpdwProcessId);
 	}
 
-	public static HWND findWindow(String lpClassName, String lpWindowName) throws WindowNotFoundException
+	public static HWND findWindow(String lpClassName, String lpWindowName)
 	{
 		lpClassName = (lpClassName == null || lpClassName.equals("")) ? null : lpClassName;
 		lpWindowName = (lpWindowName == null || lpWindowName.equals("")) ? null : lpWindowName;
 		
 		HWND hWnd = User32.SYNC_INSTANCE.FindWindowA(lpClassName, lpWindowName);
-		if (hWnd == null)
-		{
-			throw new WindowNotFoundException(lpClassName, lpWindowName);
-		}
 		return hWnd;
 	}
 
@@ -35,15 +31,6 @@ public class JUser32
 		int[] lpdwProcessId = new int[1];
 		User32.SYNC_INSTANCE.GetWindowThreadProcessId(hWnd, lpdwProcessId);
 		return lpdwProcessId[0];
-	}
-
-	@SuppressWarnings("serial")
-	public static class WindowNotFoundException extends Exception
-	{
-		public WindowNotFoundException(String className, String windowName)
-		{
-			super(String.format("Window Handle null for className: %s; windowName: %s", className, windowName));
-		}
 	}
 
 }

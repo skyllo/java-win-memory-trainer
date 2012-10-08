@@ -1,7 +1,8 @@
 package com.sprogcoder.memory;
 
-import com.sprogcoder.memory.JKernel32.MemoryException;
-import com.sprogcoder.memory.JUser32.WindowNotFoundException;
+import com.sprogcoder.memory.exception.MemoryException;
+import com.sprogcoder.memory.exception.WindowNotFoundException;
+import com.sun.jna.platform.win32.WinDef.HWND;
 
 public class JTrainer
 {
@@ -19,21 +20,52 @@ public class JTrainer
 	{
 		this.windowClass = windowClass;
 		this.windowText = windowText;
-		this.pid = JUser32.getWindowThreadProcessId(JUser32.findWindow(windowClass, windowText));
+		this.pid = JUser32.getWindowThreadProcessId(findWindow(windowClass, windowText));
+	}
+	
+	public int openProcess(int dwProcessId) throws MemoryException
+	{
+		int hProcess = JKernel32.openProcess(pid);
+		
+		if (hProcess <= 0)
+		{
+			throw new MemoryException("OpenProcess", getLastError());
+		}
+		return hProcess;
+	}
+	
+	private HWND findWindow(String lpClassName, String lpWindowName) throws WindowNotFoundException
+	{
+		HWND hWnd = JUser32.findWindow(lpClassName, lpWindowName);
+		if (hWnd == null)
+		{
+			throw new WindowNotFoundException(lpClassName, lpWindowName);
+		}
+		return hWnd;
 	}
 
 	public void writeProcessMemory(int lpBaseAddress, int lpBuffer[]) throws MemoryException
 	{
-		int hProcess = JKernel32.openProcess(pid);
-		JKernel32.writeProcessMemory(hProcess, lpBaseAddress, lpBuffer);
+		int hProcess = openProcess(pid);
+		boolean success = JKernel32.writeProcessMemory(hProcess, lpBaseAddress, lpBuffer);
 		JKernel32.closeHandle(hProcess);
+		
+		if (!success)
+		{
+			throw new MemoryException("WriteProcessMemory", getLastError());
+		}
 	}
 
 	public byte[] readProcessMemory(int lpBaseAddress, int nSize) throws MemoryException
 	{
-		int hProcess = JKernel32.openProcess(pid);
+		int hProcess = openProcess(pid);
 		byte[] result = JKernel32.readProcessMemory(hProcess, lpBaseAddress, nSize);
 		JKernel32.closeHandle(hProcess);
+		
+		if (result == null)
+		{
+			throw new MemoryException("ReadProcessMemory", getLastError());
+		}
 		return result;
 	}
 
@@ -46,5 +78,18 @@ public class JTrainer
 	{
 		this.pid = JUser32.getWindowThreadProcessId(JUser32.findWindow(windowClass, windowText));
 	}
-
+	
+	public boolean isProcessAvailable()
+	{
+		int hProcess = JKernel32.openProcess(pid);
+		if (hProcess > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 }

@@ -3,8 +3,8 @@ package main;
 import java.util.Arrays;
 
 import com.sprogcoder.memory.JTrainer;
-import com.sprogcoder.memory.JKernel32.MemoryException;
-import com.sprogcoder.memory.JUser32.WindowNotFoundException;
+import com.sprogcoder.memory.exception.MemoryException;
+import com.sprogcoder.memory.exception.WindowNotFoundException;
 
 public class Main
 {

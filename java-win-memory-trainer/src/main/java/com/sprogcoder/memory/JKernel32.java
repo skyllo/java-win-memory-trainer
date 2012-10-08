@@ -37,14 +37,10 @@ public class JKernel32
 
 	}
 
-	public static int openProcess(int dwProcessId) throws MemoryException
+	public static int openProcess(int dwProcessId)
 	{
 		int hProcess = Kernel32.SYNC_INSTANCE.OpenProcess(Kernel32.PROCESS_VM_OPERATION | Kernel32.PROCESS_VM_WRITE | Kernel32.PROCESS_VM_READ, 0,
 				dwProcessId);
-		if (hProcess <= 0)
-		{
-			throw new MemoryException("OpenProcess", getLastError());
-		}
 		return hProcess;
 	}
 
@@ -53,8 +49,9 @@ public class JKernel32
 		return Kernel32.SYNC_INSTANCE.CloseHandle(hObject);
 	}
 
-	public static void writeProcessMemory(int hProcess, int lpBaseAddress, int lpBuffer[]) throws MemoryException
+	public static boolean writeProcessMemory(int hProcess, int lpBaseAddress, int lpBuffer[])
 	{
+		boolean success = true;
 		for (int i = 0; i < lpBuffer.length; i++)
 		{
 			int[] singleValue = new int[] { lpBuffer[i] };
@@ -62,12 +59,13 @@ public class JKernel32
 			int result = Kernel32.SYNC_INSTANCE.WriteProcessMemory(hProcess, lpBaseAddress + (i * 0x00000001), singleValue, valueLength, null);
 			if (result <= 0)
 			{
-				throw new MemoryException("WriteProcessMemory", getLastError());
+				success = false;
 			}
 		}
+		return success;
 	}
 
-	public static byte[] readProcessMemory(int hProcess, int lpBaseAddress, int nSize) throws MemoryException
+	public static byte[] readProcessMemory(int hProcess, int lpBaseAddress, int nSize)
 	{
 		IntByReference baseAddress = new IntByReference();
 		baseAddress.setValue(lpBaseAddress);
@@ -81,7 +79,7 @@ public class JKernel32
 		}
 		else
 		{
-			throw new MemoryException("ReadProcessMemory", getLastError());
+			return null;
 		}
 	}
 
@@ -93,15 +91,6 @@ public class JKernel32
 				dwMessageId, 0, lpBuffer, lpBuffer.length, null);
 		String message = new String(lpBuffer, 0, lenW);
 		return message;
-	}
-
-	@SuppressWarnings("serial")
-	public static class MemoryException extends Exception
-	{
-		public MemoryException(String functionName, String message)
-		{
-			super(String.format("Kernel32 Function %s failed:\n\t%s", functionName, message));
-		}
 	}
 
 }
