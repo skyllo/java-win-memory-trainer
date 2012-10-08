@@ -41,6 +41,7 @@ public class JTrainer
 		{
 			throw new WindowNotFoundException(lpClassName, lpWindowName);
 		}
+		
 		return hWnd;
 	}
 
@@ -48,24 +49,27 @@ public class JTrainer
 	{
 		int hProcess = openProcess(pid);
 		boolean success = JKernel32.writeProcessMemory(hProcess, lpBaseAddress, lpBuffer);
-		JKernel32.closeHandle(hProcess);
 		
 		if (!success)
 		{
 			throw new MemoryException("WriteProcessMemory", getLastError());
 		}
+		
+		JKernel32.closeHandle(hProcess);
 	}
 
 	public byte[] readProcessMemory(int lpBaseAddress, int nSize) throws MemoryException
 	{
 		int hProcess = openProcess(pid);
 		byte[] result = JKernel32.readProcessMemory(hProcess, lpBaseAddress, nSize);
-		JKernel32.closeHandle(hProcess);
 		
 		if (result == null)
 		{
 			throw new MemoryException("ReadProcessMemory", getLastError());
 		}
+		
+		JKernel32.closeHandle(hProcess);
+		
 		return result;
 	}
 
@@ -82,14 +86,7 @@ public class JTrainer
 	public boolean isProcessAvailable()
 	{
 		int hProcess = JKernel32.openProcess(pid);
-		if (hProcess > 0)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return (hProcess > 0);
 	}
 	
 }

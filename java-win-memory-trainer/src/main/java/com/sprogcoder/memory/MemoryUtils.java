@@ -25,5 +25,15 @@ public class MemoryUtils
 		}
 		return realvalues;
 	}
+	
+	public static String[] convertByteArrayToHex(byte[] bytes)
+	{
+		String[] hexValues = new String[bytes.length];
+		for (int i = 0; i < bytes.length; i++)
+		{
+			hexValues[i] = Integer.toHexString(bytes[i] & 0xFF);
+		}
+		return hexValues;
+	}
 
 }
