@@ -90,6 +90,12 @@ public class JTrainer
 		return (hProcess > 0);
 	}
 	
+	public void setWindow(String windowClass, String windowText)
+	{
+		this.windowClass = windowClass;
+		this.windowText = windowText;
+	}
+	
 	public void retryProcess() throws WindowNotFoundException
 	{
 		this.pid = getProcessIdFromWindow(windowClass, windowText);
