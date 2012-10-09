@@ -25,31 +25,58 @@ import com.google.common.primitives.Ints;
 public class MemoryUtils
 {
 
-	public static int convertByteArrayToUnsignedInt(byte[] bytes)
-	{
-		byte[] byteCopy = Arrays.copyOf(bytes, bytes.length);
-		Collections.reverse(Bytes.asList(byteCopy));
-		return Ints.fromByteArray(byteCopy);
-	}
-
-	public static int[] convertByteArrayToSignedIntArray(byte[] bytes)
+	/*
+	 * Byte Array Conversion Functions
+	 */
+	public static int[] bytesToUnsignedInts(byte[] bytes)
 	{
 		int[] realvalues = new int[bytes.length];
 		for (int i = 0; i < bytes.length; i++)
 		{
 			realvalues[i] = bytes[i] & 0xFF;
 		}
+
 		return realvalues;
 	}
 
-	public static String[] convertByteArrayToHex(byte[] bytes)
+	public static String[] bytesToUnsignedHexs(byte[] bytes)
 	{
 		String[] hexValues = new String[bytes.length];
 		for (int i = 0; i < bytes.length; i++)
 		{
 			hexValues[i] = Integer.toHexString(bytes[i] & 0xFF);
 		}
+
 		return hexValues;
+	}
+
+	public static int bytesToSignedInt(byte[] bytes)
+	{
+		byte[] byteCopy = Arrays.copyOf(bytes, bytes.length);
+		Collections.reverse(Bytes.asList(byteCopy));
+
+		return Ints.fromByteArray(byteCopy);
+	}
+
+	/*
+	 * Unsigned Functions
+	 */
+	public static int unsignedShortToInt(byte[] bytes)
+	{
+		int low = bytes[0] & 0xff;
+		int high = bytes[1] & 0xff;
+
+		return (int) (high << 8 | low);
+	}
+
+	public static long unsignedIntToLong(byte[] bytes)
+	{
+		long b1 = bytes[0] & 0xff;
+		long b2 = bytes[1] & 0xff;
+		long b3 = bytes[2] & 0xff;
+		long b4 = bytes[3] & 0xff;
+
+		return (long) ((b1 << 24) | (b2 << 16) | (b3 << 8) | (b4));
 	}
 
 }

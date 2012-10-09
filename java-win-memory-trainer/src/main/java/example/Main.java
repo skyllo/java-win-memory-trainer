@@ -19,11 +19,11 @@ public class Main
 		// Old Bytes
 		jTrainer.writeProcessMemory(MEMORY_ADDRESS, new int[] { 0x22, 0x22, 0x22, 0x22 });
 		byte[] oldBytes = jTrainer.readProcessMemory(MEMORY_ADDRESS, 4);
-		System.out.println(Arrays.toString(MemoryUtils.convertByteArrayToHex(oldBytes)));
+		System.out.println(Arrays.toString(MemoryUtils.bytesToUnsignedHexs(oldBytes)));
 		
 		// New Bytes
 		jTrainer.writeProcessMemory(MEMORY_ADDRESS, new int[] { 0x90, 0x90, 0x90, 0x90 }); // nop, nop, nop, nop
 		byte[] newBytes = jTrainer.readProcessMemory(MEMORY_ADDRESS, 4);
-		System.out.println(Arrays.toString(MemoryUtils.convertByteArrayToHex(newBytes)));
+		System.out.println(Arrays.toString(MemoryUtils.bytesToUnsignedHexs(newBytes)));
 	}
 }
