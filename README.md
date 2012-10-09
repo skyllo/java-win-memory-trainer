@@ -5,6 +5,7 @@ A simple Java library used to Read and Write Memory from a Windows process, writ
 
 Usage
 -----
+Basic example:
 ```java
 // Relative memory address inside process
 final int MEMORY_ADDRESS = 0x00010ABF;
