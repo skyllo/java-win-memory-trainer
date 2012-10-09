@@ -18,7 +18,7 @@ jTrainer.writeProcessMemory(MEMORY_ADDRESS, new int[] { 0x90, 0x90, 0x90, 0x90 }
 
 // Read 4 bytes from process and print out the result
 byte[] bytes = jTrainer.readProcessMemory(MEMORY_ADDRESS, 4);
-System.out.println(Arrays.toString(MemoryUtils.bytesToUnsignedHexs(bytes));
+System.out.println(Arrays.toString(MemoryUtils.bytesToUnsignedHexes(bytes));
 ```
 
 License
