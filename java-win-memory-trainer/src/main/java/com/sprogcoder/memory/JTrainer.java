@@ -36,23 +36,13 @@ public class JTrainer
 	{
 		this.windowClass = windowClass;
 		this.windowText = windowText;
-		this.pid = JUser32.getWindowThreadProcessId(findWindow(windowClass, windowText));
-	}
-
-	public int openProcess(int dwProcessId) throws MemoryException
-	{
-		int hProcess = JKernel32.openProcess(pid);
-
-		if (hProcess <= 0)
-		{
-			throw new MemoryException("OpenProcess", getLastError());
-		}
-		return hProcess;
+		this.pid = getProcessIdFromWindow(windowClass, windowText);
 	}
 
 	private HWND findWindow(String lpClassName, String lpWindowName) throws WindowNotFoundException
 	{
 		HWND hWnd = JUser32.findWindow(lpClassName, lpWindowName);
+		
 		if (hWnd == null)
 		{
 			throw new WindowNotFoundException(lpClassName, lpWindowName);
@@ -61,17 +51,42 @@ public class JTrainer
 		return hWnd;
 	}
 
-	public void writeProcessMemory(int lpBaseAddress, int lpBuffer[]) throws MemoryException
+	public String getLastError()
 	{
-		int hProcess = openProcess(pid);
-		boolean success = JKernel32.writeProcessMemory(hProcess, lpBaseAddress, lpBuffer);
+		return JKernel32.getLastError();
+	}
 
-		if (!success)
+	private int getProcessIdFromWindow(String lpClassName, String lpWindowName) throws WindowNotFoundException
+	{
+		return getWindowTheadProcessId(findWindow(windowClass, windowText));
+	}
+
+	public int getWindowTheadProcessId(HWND hWnd)
+	{
+		return JUser32.getWindowThreadProcessId(hWnd);
+	}
+
+	public boolean isProcessAvailable()
+	{
+		int hProcess = JKernel32.openProcess(pid);
+		return (hProcess > 0);
+	}
+	
+	public void retryProcess() throws WindowNotFoundException
+	{
+		this.pid = getProcessIdFromWindow(windowClass, windowText);
+	}
+	
+	public int openProcess(int dwProcessId) throws MemoryException
+	{
+		int hProcess = JKernel32.openProcess(pid);
+
+		if (hProcess <= 0)
 		{
-			throw new MemoryException("WriteProcessMemory", getLastError());
+			throw new MemoryException("OpenProcess", getLastError());
 		}
-
-		JKernel32.closeHandle(hProcess);
+		
+		return hProcess;
 	}
 
 	public byte[] readProcessMemory(int lpBaseAddress, int nSize) throws MemoryException
@@ -89,20 +104,17 @@ public class JTrainer
 		return result;
 	}
 
-	public String getLastError()
+	public void writeProcessMemory(int lpBaseAddress, int lpBuffer[]) throws MemoryException
 	{
-		return JKernel32.getLastError();
-	}
+		int hProcess = openProcess(pid);
+		boolean success = JKernel32.writeProcessMemory(hProcess, lpBaseAddress, lpBuffer);
 
-	public void retryProcess() throws WindowNotFoundException
-	{
-		this.pid = JUser32.getWindowThreadProcessId(JUser32.findWindow(windowClass, windowText));
-	}
+		if (!success)
+		{
+			throw new MemoryException("WriteProcessMemory", getLastError());
+		}
 
-	public boolean isProcessAvailable()
-	{
-		int hProcess = JKernel32.openProcess(pid);
-		return (hProcess > 0);
+		JKernel32.closeHandle(hProcess);
 	}
 
 }
