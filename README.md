@@ -16,7 +16,7 @@ JTrainer jTrainer = new JTrainer(null, "Minesweeper");
 jTrainer.writeProcessMemory(MEMORY_ADDRESS, new int[] { 0x90, 0x90, 0x90, 0x90 });
 
 // Read 4 bytes from process and print out result
-byte[] bytes = jtrainer.readProcessMemory(MEMORY_ADDRESS, 4);
+byte[] bytes = jTrainer.readProcessMemory(MEMORY_ADDRESS, 4);
 System.out.println(Arrays.toString(MemoryUtils.convertByteArrayToHex(bytes));
 ```
 
