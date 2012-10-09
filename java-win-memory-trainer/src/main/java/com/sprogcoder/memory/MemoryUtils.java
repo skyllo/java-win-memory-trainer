@@ -39,7 +39,7 @@ public class MemoryUtils
 		return realvalues;
 	}
 
-	public static String[] bytesToUnsignedHexs(byte[] bytes)
+	public static String[] bytesToUnsignedHexes(byte[] bytes)
 	{
 		String[] hexValues = new String[bytes.length];
 		for (int i = 0; i < bytes.length; i++)
