@@ -96,7 +96,7 @@ public class JTrainer
 		this.windowText = windowText;
 	}
 	
-	public void retryProcess() throws WindowNotFoundException
+	public void reloadProcess() throws WindowNotFoundException
 	{
 		this.pid = getProcessIdFromWindow(windowClass, windowText);
 	}
