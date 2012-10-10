@@ -52,6 +52,16 @@ public class JKernel32
 		boolean ReadProcessMemory(int hProcess, int baseAddress, Pointer outputBuffer, int nSize, IntByReference outNumberOfBytesRead);
 
 	}
+	
+	public static String getLastError()
+	{
+		int dwMessageId = Kernel32.SYNC_INSTANCE.GetLastError();
+		char[] lpBuffer = new char[1024];
+		int lenW = Kernel32.SYNC_INSTANCE.FormatMessageW(Kernel32.FORMAT_MESSAGE_FROM_SYSTEM | Kernel32.FORMAT_MESSAGE_IGNORE_INSERTS, null,
+				dwMessageId, 0, lpBuffer, lpBuffer.length, null);
+		String message = new String(lpBuffer, 0, lenW);
+		return message;
+	}
 
 	public static int openProcess(int dwProcessId)
 	{
@@ -97,16 +107,6 @@ public class JKernel32
 		{
 			return null;
 		}
-	}
-
-	public static String getLastError()
-	{
-		int dwMessageId = Kernel32.SYNC_INSTANCE.GetLastError();
-		char[] lpBuffer = new char[1024];
-		int lenW = Kernel32.SYNC_INSTANCE.FormatMessageW(Kernel32.FORMAT_MESSAGE_FROM_SYSTEM | Kernel32.FORMAT_MESSAGE_IGNORE_INSERTS, null,
-				dwMessageId, 0, lpBuffer, lpBuffer.length, null);
-		String message = new String(lpBuffer, 0, lenW);
-		return message;
 	}
 
 }
