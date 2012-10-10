@@ -35,7 +35,7 @@ Dependencies
 
 References
 ------------
-* CheatEngine - http://cheatengine.org/
+* Cheat Engine - http://cheatengine.org/
 * Intel x86 Opcode Reference - http://ref.x86asm.net/coder32.html
 * Java JNA - https://github.com/twall/jna
 * OllyDbg - http://www.ollydbg.de/
